@@ -286,8 +286,8 @@ public class PlayerManager implements ParseCallback {
 
     public void fallbackDecode() {
         int current = engine.getDecode();
-        if (current == HARD_ONLY) engine.setDecode(HARD);
-        else if (current == HARD) engine.setDecode(SOFT);
+        if (current == PlayerEngine.HARD_ONLY) engine.setDecode(PlayerEngine.HARD);
+        else if (current == PlayerEngine.HARD) engine.setDecode(PlayerEngine.SOFT);
         rebuildPlayer();
         setMediaItem();
     }
