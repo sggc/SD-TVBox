@@ -55,8 +55,8 @@ android {
     }
 
     signingConfigs {
-        release {
-            if (localProps['storeFile'] != null) {
+        if (localProps['storeFile'] != null) {
+            release {
                 storeFile file(localProps['storeFile'])
                 keyAlias localProps['keyAlias']
                 keyPassword localProps['storePassword']
