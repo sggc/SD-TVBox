@@ -139,11 +139,11 @@ dependencies {
     implementation 'androidx.media3:media3-extractor:' + media3Version
     implementation 'androidx.media3:media3-session:' + media3Version
     implementation 'androidx.media3:media3-ui:' + media3Version
-    implementation 'tv.danmaku.ijk.media:ijkplayer-java:0.8.8'
-    implementation 'tv.danmaku.ijk.media:ijkplayer-armv7a:0.8.8'
-    implementation 'tv.danmaku.ijk.media:ijkplayer-arm64:0.8.8'
-    implementation 'tv.danmaku.ijk.media:ijkplayer-x86:0.8.8'
-    implementation 'tv.danmaku.ijk.media:ijkplayer-x86_64:0.8.8'
+    implementation 'com.tencent.iot.thirdparty.android:ijkplayer-java:2.0.11'
+    implementation 'com.tencent.iot.thirdparty.android:ijkplayer-armv7a:2.0.11'
+    implementation 'com.tencent.iot.thirdparty.android:ijkplayer-arm64:2.0.11'
+    implementation 'com.tencent.iot.thirdparty.android:ijkplayer-x86:2.0.11'
+    implementation 'com.tencent.iot.thirdparty.android:ijkplayer-x86_64:2.0.11'
     implementation 'androidx.palette:palette:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.4.0'
     implementation 'androidx.room:room-runtime:2.8.4'
