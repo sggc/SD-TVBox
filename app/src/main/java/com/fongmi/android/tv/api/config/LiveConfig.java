@@ -141,7 +141,12 @@ public class LiveConfig extends BaseConfig {
         String epgUrl = Setting.getEpgUrl();
         if (epgUrl.isEmpty()) return;
         Live home = getHome();
-        if (home.getEpg().isEmpty()) home.setEpg(epgUrl);
+        String currentEpg = home.getEpg();
+        if (currentEpg.isEmpty()) {
+            home.setEpg(epgUrl);
+        } else if (!currentEpg.contains(epgUrl)) {
+            home.setEpg(currentEpg + "," + epgUrl);
+        }
     }
 
     public void load() {

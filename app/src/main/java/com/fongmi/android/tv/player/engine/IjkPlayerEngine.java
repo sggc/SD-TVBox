@@ -22,11 +22,25 @@ import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 
 public class IjkPlayerEngine implements PlayerEngine {
 
+    private static Boolean available;
     private IjkMediaPlayer player;
     private PlaySpec spec;
     private Surface surface;
     private Player.Listener listener;
     private boolean prepared;
+
+    public static boolean isAvailable() {
+        if (available == null) {
+            try {
+                IjkMediaPlayer temp = new IjkMediaPlayer();
+                temp.release();
+                available = true;
+            } catch (Throwable e) {
+                available = false;
+            }
+        }
+        return available;
+    }
 
     public IjkPlayerEngine() {
         createPlayer();
@@ -47,14 +61,14 @@ public class IjkPlayerEngine implements PlayerEngine {
         player.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "framedrop", 1);
         player.setOnPreparedListener(mp -> {
             prepared = true;
-            if (surface != null) player.setSurface(surface);
+            if (surface != null && player != null) player.setSurface(surface);
         });
         player.setOnErrorListener((mp, what, extra) -> true);
     }
 
     public void setSurface(Surface surface) {
         this.surface = surface;
-        if (prepared && surface != null) player.setSurface(surface);
+        if (prepared && surface != null && player != null) player.setSurface(surface);
     }
 
     @Override

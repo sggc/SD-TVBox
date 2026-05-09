@@ -66,7 +66,7 @@ public class ExoPlayerEngine implements PlayerEngine {
 
     @Override
     public String getDecodeText() {
-        return ResUtil.getStringArray(R.array.select_decode)[decode];
+        return ResUtil.getStringArray(R.array.select_player)[EXO] + " " + ResUtil.getStringArray(R.array.select_decode)[decode];
     }
 
     @Override

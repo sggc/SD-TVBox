@@ -289,7 +289,7 @@ public class Live {
 
     public List<String> getEpgXml() {
         List<String> items = new ArrayList<>();
-        for (String epg : getEpg().split(",")) if (!epg.contains("{") && (epg.contains("xml") || epg.contains("gz"))) items.add(epg);
+        for (String epg : getEpg().split(",")) if (!epg.contains("{") && (epg.contains("xml") || epg.contains("gz") || epg.startsWith("http"))) items.add(epg);
         return items;
     }
 

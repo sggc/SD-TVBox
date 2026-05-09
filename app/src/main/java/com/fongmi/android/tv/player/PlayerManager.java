@@ -77,9 +77,23 @@ public class PlayerManager implements ParseCallback {
         if (player != null) player.removeListener(listener);
         switch (playerType) {
             case PlayerEngine.IJK:
-                engine = new IjkPlayerEngine();
-                player = null;
-                callback.onPlayerRebuild(null);
+                if (IjkPlayerEngine.isAvailable()) {
+                    try {
+                        engine = new IjkPlayerEngine();
+                        player = null;
+                        callback.onPlayerRebuild(null);
+                        break;
+                    } catch (Throwable e) {
+                        Notify.show(R.string.player_not_available);
+                    }
+                } else {
+                    Notify.show(R.string.player_not_available);
+                }
+                if (playerType == (Setting.getVodPlayer())) Setting.putVodPlayer(PlayerEngine.EXO);
+                else Setting.putLivePlayer(PlayerEngine.EXO);
+                engine = new ExoPlayerEngine(decode, listener);
+                player = engine.getPlayer();
+                callback.onPlayerRebuild(player);
                 break;
             default:
                 engine = new ExoPlayerEngine(decode, listener);

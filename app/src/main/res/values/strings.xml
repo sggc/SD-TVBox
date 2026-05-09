@@ -105,6 +105,7 @@
     <string name="player_vod_player">VOD player</string>
     <string name="player_live_player">Live player</string>
     <string name="player_epg_url">EPG URL</string>
+    <string name="player_not_available">Player not available, switched to ExoPlayer</string>
     <string name="player_aac_track">Prefer aac track</string>
     <string name="player_danmaku_load">Danmaku load</string>
     <string name="player_adblock">Remove ads</string>
