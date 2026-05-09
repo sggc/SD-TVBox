@@ -130,10 +130,18 @@ public class LiveConfig extends BaseConfig {
             if (isLoaded()) return;
             super.ensureLoaded();
             LiveApi.parse(getHome());
+            applyEpgSetting();
             LiveApi.parseXml(getHome());
         } catch (Throwable e) {
             e.printStackTrace();
         }
+    }
+
+    private void applyEpgSetting() {
+        String epgUrl = Setting.getEpgUrl();
+        if (epgUrl.isEmpty()) return;
+        Live home = getHome();
+        if (home.getEpg().isEmpty()) home.setEpg(epgUrl);
     }
 
     public void load() {

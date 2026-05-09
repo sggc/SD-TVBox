@@ -5,6 +5,7 @@ import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -35,6 +36,7 @@ public class SettingPlayerFragment extends BaseFragment implements UaCallback, B
     private String[] scale;
     private String[] rtspTransport;
     private String[] decode;
+    private String[] player;
 
     public static SettingPlayerFragment newInstance() {
         return new SettingPlayerFragment();
@@ -58,8 +60,11 @@ public class SettingPlayerFragment extends BaseFragment implements UaCallback, B
         mBinding.adblockText.setText(getSwitch(Setting.isAdblock()));
         mBinding.speedText.setText(format.format(Setting.getSpeed()));
         mBinding.bufferText.setText(String.valueOf(Setting.getBuffer()));
+        mBinding.vodPlayerText.setText((player = ResUtil.getStringArray(R.array.select_player))[Setting.getVodPlayer()]);
+        mBinding.livePlayerText.setText(player[Setting.getLivePlayer()]);
         mBinding.vodDecodeText.setText((decode = ResUtil.getStringArray(R.array.select_decode))[Setting.getVodDecode()]);
         mBinding.liveDecodeText.setText(decode[Setting.getLiveDecode()]);
+        mBinding.epgUrlText.setText(Setting.getEpgUrl());
         mBinding.danmakuLoadText.setText(getSwitch(Setting.isDanmakuLoad()));
         mBinding.caption.setVisibility(Setting.hasCaption() ? View.VISIBLE : View.GONE);
         mBinding.scaleText.setText((scale = ResUtil.getStringArray(R.array.select_scale))[Setting.getScale()]);
@@ -82,10 +87,13 @@ public class SettingPlayerFragment extends BaseFragment implements UaCallback, B
         mBinding.adblock.setOnClickListener(this::setAdblock);
         mBinding.caption.setOnLongClickListener(this::onCaption);
         mBinding.background.setOnClickListener(this::onBackground);
+        mBinding.vodPlayer.setOnClickListener(this::setVodPlayer);
+        mBinding.livePlayer.setOnClickListener(this::setLivePlayer);
         mBinding.vodDecode.setOnClickListener(this::setVodDecode);
         mBinding.liveDecode.setOnClickListener(this::setLiveDecode);
         mBinding.danmakuLoad.setOnClickListener(this::setDanmakuLoad);
         mBinding.rtspTransport.setOnClickListener(this::onRtspTransport);
+        mBinding.epgUrl.setOnClickListener(this::setEpgUrl);
     }
 
     private void onUa(View view) {
@@ -167,6 +175,22 @@ public class SettingPlayerFragment extends BaseFragment implements UaCallback, B
         }).show();
     }
 
+    private void setVodPlayer(View view) {
+        new MaterialAlertDialogBuilder(requireActivity()).setTitle(R.string.player_vod_player).setNegativeButton(R.string.dialog_negative, null).setSingleChoiceItems(player, Setting.getVodPlayer(), (dialog, which) -> {
+            mBinding.vodPlayerText.setText(player[which]);
+            Setting.putVodPlayer(which);
+            dialog.dismiss();
+        }).show();
+    }
+
+    private void setLivePlayer(View view) {
+        new MaterialAlertDialogBuilder(requireActivity()).setTitle(R.string.player_live_player).setNegativeButton(R.string.dialog_negative, null).setSingleChoiceItems(player, Setting.getLivePlayer(), (dialog, which) -> {
+            mBinding.livePlayerText.setText(player[which]);
+            Setting.putLivePlayer(which);
+            dialog.dismiss();
+        }).show();
+    }
+
     private void setVodDecode(View view) {
         new MaterialAlertDialogBuilder(requireActivity()).setTitle(R.string.player_vod_decode).setNegativeButton(R.string.dialog_negative, null).setSingleChoiceItems(decode, Setting.getVodDecode(), (dialog, which) -> {
             mBinding.vodDecodeText.setText(decode[which]);
@@ -194,6 +218,17 @@ public class SettingPlayerFragment extends BaseFragment implements UaCallback, B
             Setting.putRtspTransport(which);
             dialog.dismiss();
         }).show();
+    }
+
+    private void setEpgUrl(View view) {
+        EditText input = new EditText(requireActivity());
+        input.setText(Setting.getEpgUrl());
+        input.setSingleLine();
+        new MaterialAlertDialogBuilder(requireActivity()).setTitle(R.string.player_epg_url).setView(input).setPositiveButton(R.string.dialog_positive, (d, w) -> {
+            String url = input.getText().toString().trim();
+            Setting.putEpgUrl(url);
+            mBinding.epgUrlText.setText(url);
+        }).setNegativeButton(R.string.dialog_negative, null).show();
     }
 
     @Override

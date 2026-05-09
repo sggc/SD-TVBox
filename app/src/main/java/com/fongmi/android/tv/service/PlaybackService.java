@@ -81,9 +81,11 @@ public class PlaybackService extends MediaLibraryService implements MediaLibrary
         running = true;
         player = new PlayerManager(this);
         exoPlayer = player.getPlayer();
-        exoPlayer.addListener(listener);
-        session = new MediaLibrarySession.Builder(this, wrap(exoPlayer), this).build();
-        session.setSessionActivity(buildDefaultIntent());
+        if (exoPlayer != null) {
+            exoPlayer.addListener(listener);
+            session = new MediaLibrarySession.Builder(this, wrap(exoPlayer), this).build();
+            session.setSessionActivity(buildDefaultIntent());
+        }
         EventBus.getDefault().register(this);
         Server.get().setService(this);
         setupNotification();
@@ -169,7 +171,7 @@ public class PlaybackService extends MediaLibraryService implements MediaLibrary
 
     private void stopAndClear() {
         player.stop();
-        exoPlayer.clearMediaItems();
+        if (exoPlayer != null) exoPlayer.clearMediaItems();
     }
 
     public void suspend() {
@@ -206,7 +208,7 @@ public class PlaybackService extends MediaLibraryService implements MediaLibrary
     }
 
     private void saveProgress() {
-        if (hasNavigationCallback() || session == null) return;
+        if (hasNavigationCallback() || session == null || exoPlayer == null) return;
         if (BrowseTree.saveProgress(exoPlayer.getCurrentPosition(), exoPlayer.getDuration())) {
             session.notifyChildrenChanged("VOD", 0, null);
         }
@@ -283,7 +285,7 @@ public class PlaybackService extends MediaLibraryService implements MediaLibrary
     }
 
     public void dispatchStop() {
-        if (exoPlayer.getPlaybackState() == Player.STATE_IDLE) return;
+        if (exoPlayer == null || exoPlayer.getPlaybackState() == Player.STATE_IDLE) return;
         if (hasNavigationCallback() && isNavigationOwner()) dispatch(NavigationCallback::onStop);
         else stopAndClear();
     }
@@ -294,7 +296,7 @@ public class PlaybackService extends MediaLibraryService implements MediaLibrary
 
     public void dispatchReplay() {
         if (hasNavigationCallback() && isNavigationOwner()) dispatch(NavigationCallback::onReplay);
-        else {
+        else if (exoPlayer != null) {
             exoPlayer.seekTo(0);
             exoPlayer.play();
         }
@@ -310,6 +312,7 @@ public class PlaybackService extends MediaLibraryService implements MediaLibrary
     }
 
     private void navigateItem(int delta) {
+        if (exoPlayer == null) return;
         MediaItem current = exoPlayer.getCurrentMediaItem();
         if (current == null) return;
         Task.submit(() -> {
@@ -438,10 +441,16 @@ public class PlaybackService extends MediaLibraryService implements MediaLibrary
 
     @Override
     public void onPlayerRebuild(Player newPlayer) {
-        exoPlayer.removeListener(listener);
+        if (exoPlayer != null) exoPlayer.removeListener(listener);
         exoPlayer = newPlayer;
-        exoPlayer.addListener(listener);
-        if (session != null) session.setPlayer(wrap(newPlayer));
+        if (exoPlayer != null) {
+            exoPlayer.addListener(listener);
+            if (session != null) session.setPlayer(wrap(newPlayer));
+            else {
+                session = new MediaLibrarySession.Builder(this, wrap(exoPlayer), this).build();
+                session.setSessionActivity(buildDefaultIntent());
+            }
+        }
         playerCallbacks.forEach(callback -> callback.onPlayerRebuild(newPlayer));
     }
 

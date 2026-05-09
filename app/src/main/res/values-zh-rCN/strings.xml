@@ -101,6 +101,9 @@
     <string name="player_background">后台播放</string>
     <string name="player_vod_decode">点播解码</string>
     <string name="player_live_decode">直播解码</string>
+    <string name="player_vod_player">点播播放器</string>
+    <string name="player_live_player">直播播放器</string>
+    <string name="player_epg_url">EPG地址</string>
     <string name="player_aac_track">AAC优先</string>
     <string name="player_danmaku_load">弹幕加载</string>
     <string name="player_adblock">智能去广</string>
@@ -163,6 +166,12 @@
         <item>软解优先</item>
         <item>硬解优先</item>
         <item>仅硬解</item>
+    </string-array>
+
+    <string-array name="select_player">
+        <item>ExoPlayer</item>
+        <item>IJKPlayer</item>
+        <item>系统播放器</item>
     </string-array>
 
     <string-array name="select_rtsp_transport">

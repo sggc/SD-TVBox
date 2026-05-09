@@ -21,6 +21,8 @@ import androidx.media3.ui.PlayerView;
 import com.fongmi.android.tv.R;
 import com.fongmi.android.tv.Setting;
 import com.fongmi.android.tv.bean.Result;
+import com.fongmi.android.tv.player.engine.IjkPlayerEngine;
+import com.fongmi.android.tv.player.engine.PlayerEngine;
 import com.fongmi.android.tv.player.PlayerManager;
 import com.fongmi.android.tv.player.engine.PlaySpec;
 import com.fongmi.android.tv.player.exo.ExoUtil;
@@ -200,16 +202,65 @@ public abstract class PlaybackActivity extends BaseActivity implements MediaCont
     }
 
     private void attachSurface() {
-        if (mService != null && getExoView().getPlayer() == null) getExoView().setPlayer(player().getPlayer());
+        if (mService == null) return;
+        if (player().getEngineType() == PlayerEngine.IJK) {
+            attachIjkSurface();
+        } else {
+            if (getExoView().getPlayer() == null) getExoView().setPlayer(player().getPlayer());
+        }
     }
 
     private void detachSurface() {
-        getExoView().setPlayer(null);
+        if (player().getEngineType() == PlayerEngine.IJK) {
+            detachIjkSurface();
+        } else {
+            getExoView().setPlayer(null);
+        }
     }
 
     private void setRender() {
         detachSurface();
         attachSurface();
+    }
+
+    private android.view.SurfaceView mIjkSurface;
+    private android.widget.FrameLayout mIjkContainer;
+
+    private void attachIjkSurface() {
+        IjkPlayerEngine ijkEngine = player().getIjkEngine();
+        if (ijkEngine == null) return;
+        getExoView().setVisibility(android.view.View.GONE);
+        if (mIjkContainer == null) {
+            mIjkContainer = new android.widget.FrameLayout(this);
+            android.view.ViewGroup parent = (android.view.ViewGroup) getExoView().getParent();
+            int index = parent.indexOfChild(getExoView());
+            parent.addView(mIjkContainer, index, new android.view.ViewGroup.LayoutParams(android.view.ViewGroup.LayoutParams.MATCH_PARENT, android.view.ViewGroup.LayoutParams.MATCH_PARENT));
+            mIjkSurface = new android.view.SurfaceView(this);
+            mIjkContainer.addView(mIjkSurface, new android.widget.FrameLayout.LayoutParams(android.widget.FrameLayout.LayoutParams.MATCH_PARENT, android.widget.FrameLayout.LayoutParams.MATCH_PARENT));
+            mIjkSurface.getHolder().addCallback(new android.view.SurfaceHolder.Callback() {
+                @Override
+                public void surfaceCreated(android.view.SurfaceHolder holder) {
+                    ijkEngine.setSurface(holder.getSurface());
+                }
+
+                @Override
+                public void surfaceChanged(android.view.SurfaceHolder holder, int format, int width, int height) {
+                }
+
+                @Override
+                public void surfaceDestroyed(android.view.SurfaceHolder holder) {
+                    ijkEngine.setSurface(null);
+                }
+            });
+        }
+        mIjkContainer.setVisibility(android.view.View.VISIBLE);
+    }
+
+    private void detachIjkSurface() {
+        IjkPlayerEngine ijkEngine = player().getIjkEngine();
+        if (ijkEngine != null) ijkEngine.setSurface(null);
+        if (mIjkContainer != null) mIjkContainer.setVisibility(android.view.View.GONE);
+        getExoView().setVisibility(android.view.View.VISIBLE);
     }
 
     private void releasePlaybackService() {

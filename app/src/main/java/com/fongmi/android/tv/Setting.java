@@ -210,6 +210,30 @@ public class Setting {
         Prefers.put("live_decode", decode);
     }
 
+    public static int getVodPlayer() {
+        return Prefers.getInt("vod_player");
+    }
+
+    public static void putVodPlayer(int player) {
+        Prefers.put("vod_player", player);
+    }
+
+    public static int getLivePlayer() {
+        return Prefers.getInt("live_player");
+    }
+
+    public static void putLivePlayer(int player) {
+        Prefers.put("live_player", player);
+    }
+
+    public static String getEpgUrl() {
+        return Prefers.getString("epg_url");
+    }
+
+    public static void putEpgUrl(String url) {
+        Prefers.put("epg_url", url);
+    }
+
     public static boolean isPreferAAC() {
         return Prefers.getBoolean("prefer_aac");
     }

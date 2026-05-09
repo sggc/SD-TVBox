@@ -16,6 +16,12 @@ public interface PlayerEngine {
     int HARD = 1;
     int HARD_ONLY = 2;
 
+    int EXO = 0;
+    int IJK = 1;
+    int SYSTEM = 2;
+
+    int getType();
+
     Player getPlayer();
 
     void release();
@@ -49,6 +55,24 @@ public interface PlayerEngine {
     String getErrorMessage(PlaybackException e);
 
     ErrorAction handleError(PlaybackException e);
+
+    void play();
+
+    void pause();
+
+    void stopPlayback();
+
+    void seekTo(long time);
+
+    long getCurrentPosition();
+
+    long getDuration();
+
+    boolean isPlaying();
+
+    void setPlaybackSpeed(float speed);
+
+    float getPlaybackSpeed();
 
     enum ErrorAction {
         RECOVERED,

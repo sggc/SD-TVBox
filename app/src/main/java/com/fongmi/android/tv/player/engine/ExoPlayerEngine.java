@@ -29,6 +29,11 @@ public class ExoPlayerEngine implements PlayerEngine {
     }
 
     @Override
+    public int getType() {
+        return EXO;
+    }
+
+    @Override
     public Player getPlayer() {
         return player;
     }
@@ -119,6 +124,51 @@ public class ExoPlayerEngine implements PlayerEngine {
             case PlaybackException.ERROR_CODE_IO_UNSPECIFIED, PlaybackException.ERROR_CODE_PARSING_CONTAINER_MALFORMED, PlaybackException.ERROR_CODE_PARSING_MANIFEST_MALFORMED, PlaybackException.ERROR_CODE_PARSING_CONTAINER_UNSUPPORTED, PlaybackException.ERROR_CODE_PARSING_MANIFEST_UNSUPPORTED -> retryFormat(e.errorCode);
             default -> ErrorAction.FATAL;
         };
+    }
+
+    @Override
+    public void play() {
+        player.play();
+    }
+
+    @Override
+    public void pause() {
+        player.pause();
+    }
+
+    @Override
+    public void stopPlayback() {
+        player.stop();
+    }
+
+    @Override
+    public void seekTo(long time) {
+        player.seekTo(time);
+    }
+
+    @Override
+    public long getCurrentPosition() {
+        return player.getCurrentPosition();
+    }
+
+    @Override
+    public long getDuration() {
+        return player.getDuration();
+    }
+
+    @Override
+    public boolean isPlaying() {
+        return player.isPlaying();
+    }
+
+    @Override
+    public void setPlaybackSpeed(float speed) {
+        player.setPlaybackParameters(player.getPlaybackParameters().withSpeed(speed));
+    }
+
+    @Override
+    public float getPlaybackSpeed() {
+        return player.getPlaybackParameters().speed;
     }
 
     private void startInternal() {

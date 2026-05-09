@@ -1,10 +1,12 @@
 package com.fongmi.android.tv.ui.activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.View;
+import android.widget.EditText;
 
 import androidx.viewbinding.ViewBinding;
 
@@ -31,6 +33,7 @@ public class SettingPlayerActivity extends BaseActivity implements UaCallback, B
     private String[] scale;
     private String[] rtspTransport;
     private String[] decode;
+    private String[] player;
 
     public static void start(Activity activity) {
         activity.startActivity(new Intent(activity, SettingPlayerActivity.class));
@@ -57,8 +60,11 @@ public class SettingPlayerActivity extends BaseActivity implements UaCallback, B
         mBinding.speedText.setText(format.format(Setting.getSpeed()));
         mBinding.bufferText.setText(String.valueOf(Setting.getBuffer()));
         mBinding.backgroundText.setText(getSwitch(Setting.isBackgroundOn()));
+        mBinding.vodPlayerText.setText((player = ResUtil.getStringArray(R.array.select_player))[Setting.getVodPlayer()]);
+        mBinding.livePlayerText.setText(player[Setting.getLivePlayer()]);
         mBinding.vodDecodeText.setText((decode = ResUtil.getStringArray(R.array.select_decode))[Setting.getVodDecode()]);
         mBinding.liveDecodeText.setText(decode[Setting.getLiveDecode()]);
+        mBinding.epgUrlText.setText(Setting.getEpgUrl());
         mBinding.danmakuLoadText.setText(getSwitch(Setting.isDanmakuLoad()));
         mBinding.scaleText.setText((scale = ResUtil.getStringArray(R.array.select_scale))[Setting.getScale()]);
         mBinding.renderText.setText((render = ResUtil.getStringArray(R.array.select_render))[Setting.getRender()]);
@@ -79,10 +85,13 @@ public class SettingPlayerActivity extends BaseActivity implements UaCallback, B
         mBinding.adblock.setOnClickListener(this::setAdblock);
         mBinding.caption.setOnLongClickListener(this::onCaption);
         mBinding.background.setOnClickListener(this::onBackground);
+        mBinding.vodPlayer.setOnClickListener(this::setVodPlayer);
+        mBinding.livePlayer.setOnClickListener(this::setLivePlayer);
         mBinding.vodDecode.setOnClickListener(this::setVodDecode);
         mBinding.liveDecode.setOnClickListener(this::setLiveDecode);
         mBinding.danmakuLoad.setOnClickListener(this::setDanmakuLoad);
         mBinding.rtspTransport.setOnClickListener(this::setRtspTransport);
+        mBinding.epgUrl.setOnClickListener(this::setEpgUrl);
     }
 
     private void setVisible() {
@@ -159,6 +168,18 @@ public class SettingPlayerActivity extends BaseActivity implements UaCallback, B
         return Setting.isCaption();
     }
 
+    private void setVodPlayer(View view) {
+        int index = (Setting.getVodPlayer() + 1) % player.length;
+        mBinding.vodPlayerText.setText(player[index]);
+        Setting.putVodPlayer(index);
+    }
+
+    private void setLivePlayer(View view) {
+        int index = (Setting.getLivePlayer() + 1) % player.length;
+        mBinding.livePlayerText.setText(player[index]);
+        Setting.putLivePlayer(index);
+    }
+
     private void setVodDecode(View view) {
         int index = (Setting.getVodDecode() + 1) % decode.length;
         mBinding.vodDecodeText.setText(decode[index]);
@@ -180,6 +201,17 @@ public class SettingPlayerActivity extends BaseActivity implements UaCallback, B
         int index = (Setting.getRtspTransport() + 1) % rtspTransport.length;
         mBinding.rtspTransportText.setText(rtspTransport[index]);
         Setting.putRtspTransport(index);
+    }
+
+    private void setEpgUrl(View view) {
+        EditText input = new EditText(this);
+        input.setText(Setting.getEpgUrl());
+        input.setSingleLine();
+        new AlertDialog.Builder(this).setTitle(R.string.player_epg_url).setView(input).setPositiveButton(R.string.dialog_positive, (d, w) -> {
+            String url = input.getText().toString().trim();
+            Setting.putEpgUrl(url);
+            mBinding.epgUrlText.setText(url);
+        }).setNegativeButton(R.string.dialog_negative, null).show();
     }
 
     private void onBackground(View view) {
