@@ -68,7 +68,10 @@ android {
                 keyPassword localProps['storePassword']
                 storePassword localProps['storePassword']
             } else {
-                signingConfig = signingConfigs.debug
+                storeFile file('debug.jks')
+                keyAlias 'debug'
+                keyPassword 'debug123'
+                storePassword 'debug123'
             }
         }
     }
@@ -80,7 +83,7 @@ android {
         release {
             minifyEnabled = true
             shrinkResources = true
-            signingConfig = localProps['storeFile'] != null ? signingConfigs.release : signingConfigs.debug
+            signingConfig = signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro', 'proguard-rules-media.pro'
         }
     }
