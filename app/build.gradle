@@ -55,35 +55,25 @@ android {
     }
 
     signingConfigs {
-        debug {
-            storeFile file('debug.jks')
-            keyAlias 'debug'
-            keyPassword 'debug123'
-            storePassword 'debug123'
-        }
         release {
             if (localProps['storeFile'] != null) {
                 storeFile file(localProps['storeFile'])
                 keyAlias localProps['keyAlias']
                 keyPassword localProps['storePassword']
                 storePassword localProps['storePassword']
-            } else {
-                storeFile file('debug.jks')
-                keyAlias 'debug'
-                keyPassword 'debug123'
-                storePassword 'debug123'
             }
         }
     }
 
     buildTypes {
         debug {
-            signingConfig = signingConfigs.debug
         }
         release {
             minifyEnabled = true
             shrinkResources = true
-            signingConfig = signingConfigs.release
+            if (localProps['storeFile'] != null) {
+                signingConfig = signingConfigs.release
+            }
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro', 'proguard-rules-media.pro'
         }
     }
