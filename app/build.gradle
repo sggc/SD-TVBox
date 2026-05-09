@@ -142,8 +142,6 @@ dependencies {
     implementation 'com.tencent.iot.thirdparty.android:ijkplayer-java:2.0.11'
     implementation 'com.tencent.iot.thirdparty.android:ijkplayer-armv7a:2.0.11'
     implementation 'com.tencent.iot.thirdparty.android:ijkplayer-arm64:2.0.11'
-    implementation 'com.tencent.iot.thirdparty.android:ijkplayer-x86:2.0.11'
-    implementation 'com.tencent.iot.thirdparty.android:ijkplayer-x86_64:2.0.11'
     implementation 'androidx.palette:palette:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.4.0'
     implementation 'androidx.room:room-runtime:2.8.4'
