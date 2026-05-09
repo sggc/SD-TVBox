@@ -56,7 +56,7 @@ public class ExoPlayerEngine implements PlayerEngine {
 
     @Override
     public boolean isHard() {
-        return decode == HARD;
+        return decode == HARD || decode == HARD_ONLY;
     }
 
     @Override

@@ -84,6 +84,7 @@ public class ExoUtil {
     }
 
     private static int getRenderMode(int decode) {
+        if (decode == PlayerEngine.HARD_ONLY) return DefaultRenderersFactory.EXTENSION_RENDERER_MODE_OFF;
         return decode == PlayerEngine.HARD ? DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON : DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER;
     }
 

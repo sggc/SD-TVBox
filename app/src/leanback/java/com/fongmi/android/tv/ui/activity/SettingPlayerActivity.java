@@ -29,6 +29,7 @@ public class SettingPlayerActivity extends BaseActivity implements UaCallback, B
     private String[] caption;
     private String[] render;
     private String[] scale;
+    private String[] rtspTransport;
 
     public static void start(Activity activity) {
         activity.startActivity(new Intent(activity, SettingPlayerActivity.class));
@@ -60,6 +61,7 @@ public class SettingPlayerActivity extends BaseActivity implements UaCallback, B
         mBinding.danmakuLoadText.setText(getSwitch(Setting.isDanmakuLoad()));
         mBinding.scaleText.setText((scale = ResUtil.getStringArray(R.array.select_scale))[Setting.getScale()]);
         mBinding.renderText.setText((render = ResUtil.getStringArray(R.array.select_render))[Setting.getRender()]);
+        mBinding.rtspTransportText.setText((rtspTransport = ResUtil.getStringArray(R.array.select_rtsp_transport))[Setting.getRtspTransport()]);
         mBinding.captionText.setText((caption = ResUtil.getStringArray(R.array.select_caption))[Setting.isCaption() ? 1 : 0]);
     }
 
@@ -79,6 +81,7 @@ public class SettingPlayerActivity extends BaseActivity implements UaCallback, B
         mBinding.audioDecode.setOnClickListener(this::setAudioDecode);
         mBinding.videoDecode.setOnClickListener(this::setVideoDecode);
         mBinding.danmakuLoad.setOnClickListener(this::setDanmakuLoad);
+        mBinding.rtspTransport.setOnClickListener(this::setRtspTransport);
     }
 
     private void setVisible() {
@@ -168,6 +171,12 @@ public class SettingPlayerActivity extends BaseActivity implements UaCallback, B
     private void setDanmakuLoad(View view) {
         Setting.putDanmakuLoad(!Setting.isDanmakuLoad());
         mBinding.danmakuLoadText.setText(getSwitch(Setting.isDanmakuLoad()));
+    }
+
+    private void setRtspTransport(View view) {
+        int index = (Setting.getRtspTransport() + 1) % rtspTransport.length;
+        mBinding.rtspTransportText.setText(rtspTransport[index]);
+        Setting.putRtspTransport(index);
     }
 
     private void onBackground(View view) {

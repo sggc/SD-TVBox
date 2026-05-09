@@ -108,6 +108,7 @@
     <string name="player_buffer">缓冲时间</string>
     <string name="player_speed">长按倍速</string>
     <string name="player_ua">User-Agent</string>
+    <string name="player_rtsp_transport">RTSP传输</string>
 
     <!-- Search -->
     <string name="search_keyword">关键字…</string>
@@ -159,8 +160,15 @@
     <string name="lines">行</string>
 
     <string-array name="select_decode">
-        <item>软解</item>
-        <item>硬解</item>
+        <item>软解优先</item>
+        <item>硬解优先</item>
+        <item>仅硬解</item>
+    </string-array>
+
+    <string-array name="select_rtsp_transport">
+        <item>自动</item>
+        <item>UDP</item>
+        <item>TCP</item>
     </string-array>
 
     <string-array name="select_size">

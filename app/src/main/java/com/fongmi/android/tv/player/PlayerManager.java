@@ -279,7 +279,15 @@ public class PlayerManager implements ParseCallback {
     }
 
     public void toggleDecode() {
-        engine.setDecode(engine.isHard() ? PlayerEngine.SOFT : PlayerEngine.HARD);
+        engine.setDecode((engine.getDecode() + 1) % 3);
+        rebuildPlayer();
+        setMediaItem();
+    }
+
+    public void fallbackDecode() {
+        int current = engine.getDecode();
+        if (current == HARD_ONLY) engine.setDecode(HARD);
+        else if (current == HARD) engine.setDecode(SOFT);
         rebuildPlayer();
         setMediaItem();
     }
@@ -392,7 +400,7 @@ public class PlayerManager implements ParseCallback {
             }
             switch (action) {
                 case DECODE:
-                    toggleDecode();
+                    fallbackDecode();
                     break;
                 case FATAL:
                     callback.onError(engine.getErrorMessage(e));

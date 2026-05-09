@@ -274,6 +274,22 @@ public class Setting {
         Prefers.put("subtitle_position", value);
     }
 
+    public static int getRtspTransport() {
+        return Prefers.getInt("rtsp_transport");
+    }
+
+    public static void putRtspTransport(int transport) {
+        Prefers.put("rtsp_transport", transport);
+    }
+
+    public static boolean isRtspForceTcp() {
+        return getRtspTransport() == 2;
+    }
+
+    public static boolean isRtspForceUdp() {
+        return getRtspTransport() == 1;
+    }
+
     public static boolean isBackgroundOff() {
         return getBackground() == 0;
     }

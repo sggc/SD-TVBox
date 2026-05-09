@@ -14,6 +14,7 @@ public interface PlayerEngine {
 
     int SOFT = 0;
     int HARD = 1;
+    int HARD_ONLY = 2;
 
     Player getPlayer();
 

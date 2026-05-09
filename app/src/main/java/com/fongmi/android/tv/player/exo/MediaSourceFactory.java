@@ -16,6 +16,7 @@ import androidx.media3.datasource.cache.NoOpCacheEvictor;
 import androidx.media3.datasource.cache.SimpleCache;
 import androidx.media3.datasource.okhttp.OkHttpDataSource;
 import androidx.media3.exoplayer.drm.DrmSessionManagerProvider;
+import androidx.media3.exoplayer.rtsp.RtspMediaSource;
 import androidx.media3.exoplayer.source.ConcatenatingMediaSource2;
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory;
 import androidx.media3.exoplayer.source.MediaSource;
@@ -25,10 +26,15 @@ import androidx.media3.extractor.ExtractorsFactory;
 import androidx.media3.extractor.ts.TsExtractor;
 
 import com.fongmi.android.tv.App;
+import com.fongmi.android.tv.Setting;
 import com.github.catvod.net.OkHttp;
 import com.github.catvod.utils.Path;
 
 public class MediaSourceFactory implements MediaSource.Factory {
+
+    private static final String SCHEME_RTSP = "rtsp";
+    private static final String SCHEME_RTSPS = "rtsps";
+    private static final long UDP_TIMEOUT_MS = 28800000L;
 
     private final DefaultMediaSourceFactory defaultMediaSourceFactory;
     private HttpDataSource.Factory httpDataSourceFactory;
@@ -64,7 +70,23 @@ public class MediaSourceFactory implements MediaSource.Factory {
         getHttpDataSourceFactory().setDefaultRequestProperties(ExoUtil.extractHeaders(mediaItem));
         String url = mediaItem.requestMetadata.mediaUri != null ? mediaItem.requestMetadata.mediaUri.toString() : "";
         if (url.contains("***") && url.contains("|||")) return createConcatenatingMediaSource(mediaItem, url);
-        else return defaultMediaSourceFactory.createMediaSource(mediaItem);
+        if (isRtspUrl(url)) return createRtspMediaSource(mediaItem);
+        return defaultMediaSourceFactory.createMediaSource(mediaItem);
+    }
+
+    private boolean isRtspUrl(String url) {
+        return url.startsWith(SCHEME_RTSP + "://") || url.startsWith(SCHEME_RTSPS + "://");
+    }
+
+    private MediaSource createRtspMediaSource(MediaItem mediaItem) {
+        RtspMediaSource.Factory factory = new RtspMediaSource.Factory();
+        int transport = Setting.getRtspTransport();
+        if (transport == 2) {
+            factory.setForceUseRtpTcp(true);
+        } else if (transport == 1) {
+            factory.setTimeoutMs(UDP_TIMEOUT_MS);
+        }
+        return factory.createMediaSource(mediaItem);
     }
 
     private MediaSource createConcatenatingMediaSource(MediaItem mediaItem, String url) {

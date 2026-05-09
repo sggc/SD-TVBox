@@ -109,6 +109,7 @@
     <string name="player_buffer">Buffer time</string>
     <string name="player_speed">Press speed</string>
     <string name="player_ua">User-Agent</string>
+    <string name="player_rtsp_transport">RTSP Transport</string>
 
     <!-- Search -->
     <string name="search_keyword">Keywords…</string>
@@ -162,6 +163,13 @@
     <string-array name="select_decode">
         <item>Soft</item>
         <item>Hard</item>
+        <item>Hard Only</item>
+    </string-array>
+
+    <string-array name="select_rtsp_transport">
+        <item>Auto</item>
+        <item>UDP</item>
+        <item>TCP</item>
     </string-array>
 
     <string-array name="select_render">

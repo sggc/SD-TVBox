@@ -33,6 +33,7 @@ public class SettingPlayerFragment extends BaseFragment implements UaCallback, B
     private String[] caption;
     private String[] render;
     private String[] scale;
+    private String[] rtspTransport;
 
     public static SettingPlayerFragment newInstance() {
         return new SettingPlayerFragment();
@@ -62,6 +63,7 @@ public class SettingPlayerFragment extends BaseFragment implements UaCallback, B
         mBinding.caption.setVisibility(Setting.hasCaption() ? View.VISIBLE : View.GONE);
         mBinding.scaleText.setText((scale = ResUtil.getStringArray(R.array.select_scale))[Setting.getScale()]);
         mBinding.renderText.setText((render = ResUtil.getStringArray(R.array.select_render))[Setting.getRender()]);
+        mBinding.rtspTransportText.setText((rtspTransport = ResUtil.getStringArray(R.array.select_rtsp_transport))[Setting.getRtspTransport()]);
         mBinding.captionText.setText((caption = ResUtil.getStringArray(R.array.select_caption))[Setting.isCaption() ? 1 : 0]);
         mBinding.backgroundText.setText((background = ResUtil.getStringArray(R.array.select_background))[Setting.getBackground()]);
     }
@@ -82,6 +84,7 @@ public class SettingPlayerFragment extends BaseFragment implements UaCallback, B
         mBinding.audioDecode.setOnClickListener(this::setAudioDecode);
         mBinding.videoDecode.setOnClickListener(this::setVideoDecode);
         mBinding.danmakuLoad.setOnClickListener(this::setDanmakuLoad);
+        mBinding.rtspTransport.setOnClickListener(this::onRtspTransport);
     }
 
     private void onUa(View view) {
@@ -176,6 +179,14 @@ public class SettingPlayerFragment extends BaseFragment implements UaCallback, B
     private void setDanmakuLoad(View view) {
         Setting.putDanmakuLoad(!Setting.isDanmakuLoad());
         mBinding.danmakuLoadText.setText(getSwitch(Setting.isDanmakuLoad()));
+    }
+
+    private void onRtspTransport(View view) {
+        new MaterialAlertDialogBuilder(requireActivity()).setTitle(R.string.player_rtsp_transport).setNegativeButton(R.string.dialog_negative, null).setSingleChoiceItems(rtspTransport, Setting.getRtspTransport(), (dialog, which) -> {
+            mBinding.rtspTransportText.setText(rtspTransport[which]);
+            Setting.putRtspTransport(which);
+            dialog.dismiss();
+        }).show();
     }
 
     @Override
