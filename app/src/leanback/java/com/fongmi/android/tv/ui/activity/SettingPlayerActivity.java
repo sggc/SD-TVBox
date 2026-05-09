@@ -30,6 +30,7 @@ public class SettingPlayerActivity extends BaseActivity implements UaCallback, B
     private String[] render;
     private String[] scale;
     private String[] rtspTransport;
+    private String[] decode;
 
     public static void start(Activity activity) {
         activity.startActivity(new Intent(activity, SettingPlayerActivity.class));
@@ -56,8 +57,8 @@ public class SettingPlayerActivity extends BaseActivity implements UaCallback, B
         mBinding.speedText.setText(format.format(Setting.getSpeed()));
         mBinding.bufferText.setText(String.valueOf(Setting.getBuffer()));
         mBinding.backgroundText.setText(getSwitch(Setting.isBackgroundOn()));
-        mBinding.audioDecodeText.setText(getSwitch(Setting.isAudioPrefer()));
-        mBinding.videoDecodeText.setText(getSwitch(Setting.isVideoPrefer()));
+        mBinding.vodDecodeText.setText((decode = ResUtil.getStringArray(R.array.select_decode))[Setting.getVodDecode()]);
+        mBinding.liveDecodeText.setText(decode[Setting.getLiveDecode()]);
         mBinding.danmakuLoadText.setText(getSwitch(Setting.isDanmakuLoad()));
         mBinding.scaleText.setText((scale = ResUtil.getStringArray(R.array.select_scale))[Setting.getScale()]);
         mBinding.renderText.setText((render = ResUtil.getStringArray(R.array.select_render))[Setting.getRender()]);
@@ -78,8 +79,8 @@ public class SettingPlayerActivity extends BaseActivity implements UaCallback, B
         mBinding.adblock.setOnClickListener(this::setAdblock);
         mBinding.caption.setOnLongClickListener(this::onCaption);
         mBinding.background.setOnClickListener(this::onBackground);
-        mBinding.audioDecode.setOnClickListener(this::setAudioDecode);
-        mBinding.videoDecode.setOnClickListener(this::setVideoDecode);
+        mBinding.vodDecode.setOnClickListener(this::setVodDecode);
+        mBinding.liveDecode.setOnClickListener(this::setLiveDecode);
         mBinding.danmakuLoad.setOnClickListener(this::setDanmakuLoad);
         mBinding.rtspTransport.setOnClickListener(this::setRtspTransport);
     }
@@ -158,14 +159,16 @@ public class SettingPlayerActivity extends BaseActivity implements UaCallback, B
         return Setting.isCaption();
     }
 
-    private void setAudioDecode(View view) {
-        Setting.putAudioPrefer(!Setting.isAudioPrefer());
-        mBinding.audioDecodeText.setText(getSwitch(Setting.isAudioPrefer()));
+    private void setVodDecode(View view) {
+        int index = (Setting.getVodDecode() + 1) % decode.length;
+        mBinding.vodDecodeText.setText(decode[index]);
+        Setting.putVodDecode(index);
     }
 
-    private void setVideoDecode(View view) {
-        Setting.putVideoPrefer(!Setting.isVideoPrefer());
-        mBinding.videoDecodeText.setText(getSwitch(Setting.isVideoPrefer()));
+    private void setLiveDecode(View view) {
+        int index = (Setting.getLiveDecode() + 1) % decode.length;
+        mBinding.liveDecodeText.setText(decode[index]);
+        Setting.putLiveDecode(index);
     }
 
     private void setDanmakuLoad(View view) {

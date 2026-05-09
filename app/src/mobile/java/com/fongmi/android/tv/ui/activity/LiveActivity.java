@@ -147,6 +147,7 @@ public class LiveActivity extends PlaybackActivity implements CustomKeyDown.List
 
     @Override
     protected void onServiceConnected() {
+        player().initDecode(true);
         mBinding.control.action.speed.setText(player().getSpeedText());
         mBinding.control.action.decode.setText(player().getDecodeText());
         checkLive();

@@ -99,8 +99,8 @@
     <string name="player_libass">字幕渲染</string>
     <string name="player_caption">字幕樣式</string>
     <string name="player_background">背景播放</string>
-    <string name="player_audio_decode">音訊軟解</string>
-    <string name="player_video_decode">視訊軟解</string>
+    <string name="player_vod_decode">點播解碼</string>
+    <string name="player_live_decode">直播解碼</string>
     <string name="player_aac_track">AAC優先</string>
     <string name="player_danmaku_load">彈幕載入</string>
     <string name="player_adblock">智慧去廣</string>

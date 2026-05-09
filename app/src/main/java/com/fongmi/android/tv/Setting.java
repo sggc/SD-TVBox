@@ -194,20 +194,20 @@ public class Setting {
         Prefers.put("tunnel", tunnel);
     }
 
-    public static boolean isAudioPrefer() {
-        return Prefers.getBoolean("audio_prefer");
+    public static int getVodDecode() {
+        return Prefers.getInt("vod_decode", 1);
     }
 
-    public static void putAudioPrefer(boolean audioPrefer) {
-        Prefers.put("audio_prefer", audioPrefer);
+    public static void putVodDecode(int decode) {
+        Prefers.put("vod_decode", decode);
     }
 
-    public static boolean isVideoPrefer() {
-        return Prefers.getBoolean("video_prefer");
+    public static int getLiveDecode() {
+        return Prefers.getInt("live_decode", 1);
     }
 
-    public static void putVideoPrefer(boolean videoPrefer) {
-        Prefers.put("video_prefer", videoPrefer);
+    public static void putLiveDecode(int decode) {
+        Prefers.put("live_decode", decode);
     }
 
     public static boolean isPreferAAC() {

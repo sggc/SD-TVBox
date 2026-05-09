@@ -34,6 +34,7 @@ public class SettingPlayerFragment extends BaseFragment implements UaCallback, B
     private String[] render;
     private String[] scale;
     private String[] rtspTransport;
+    private String[] decode;
 
     public static SettingPlayerFragment newInstance() {
         return new SettingPlayerFragment();
@@ -57,8 +58,8 @@ public class SettingPlayerFragment extends BaseFragment implements UaCallback, B
         mBinding.adblockText.setText(getSwitch(Setting.isAdblock()));
         mBinding.speedText.setText(format.format(Setting.getSpeed()));
         mBinding.bufferText.setText(String.valueOf(Setting.getBuffer()));
-        mBinding.audioDecodeText.setText(getSwitch(Setting.isAudioPrefer()));
-        mBinding.videoDecodeText.setText(getSwitch(Setting.isVideoPrefer()));
+        mBinding.vodDecodeText.setText((decode = ResUtil.getStringArray(R.array.select_decode))[Setting.getVodDecode()]);
+        mBinding.liveDecodeText.setText(decode[Setting.getLiveDecode()]);
         mBinding.danmakuLoadText.setText(getSwitch(Setting.isDanmakuLoad()));
         mBinding.caption.setVisibility(Setting.hasCaption() ? View.VISIBLE : View.GONE);
         mBinding.scaleText.setText((scale = ResUtil.getStringArray(R.array.select_scale))[Setting.getScale()]);
@@ -81,8 +82,8 @@ public class SettingPlayerFragment extends BaseFragment implements UaCallback, B
         mBinding.adblock.setOnClickListener(this::setAdblock);
         mBinding.caption.setOnLongClickListener(this::onCaption);
         mBinding.background.setOnClickListener(this::onBackground);
-        mBinding.audioDecode.setOnClickListener(this::setAudioDecode);
-        mBinding.videoDecode.setOnClickListener(this::setVideoDecode);
+        mBinding.vodDecode.setOnClickListener(this::setVodDecode);
+        mBinding.liveDecode.setOnClickListener(this::setLiveDecode);
         mBinding.danmakuLoad.setOnClickListener(this::setDanmakuLoad);
         mBinding.rtspTransport.setOnClickListener(this::onRtspTransport);
     }
@@ -166,14 +167,20 @@ public class SettingPlayerFragment extends BaseFragment implements UaCallback, B
         }).show();
     }
 
-    private void setAudioDecode(View view) {
-        Setting.putAudioPrefer(!Setting.isAudioPrefer());
-        mBinding.audioDecodeText.setText(getSwitch(Setting.isAudioPrefer()));
+    private void setVodDecode(View view) {
+        new MaterialAlertDialogBuilder(requireActivity()).setTitle(R.string.player_vod_decode).setNegativeButton(R.string.dialog_negative, null).setSingleChoiceItems(decode, Setting.getVodDecode(), (dialog, which) -> {
+            mBinding.vodDecodeText.setText(decode[which]);
+            Setting.putVodDecode(which);
+            dialog.dismiss();
+        }).show();
     }
 
-    private void setVideoDecode(View view) {
-        Setting.putVideoPrefer(!Setting.isVideoPrefer());
-        mBinding.videoDecodeText.setText(getSwitch(Setting.isVideoPrefer()));
+    private void setLiveDecode(View view) {
+        new MaterialAlertDialogBuilder(requireActivity()).setTitle(R.string.player_live_decode).setNegativeButton(R.string.dialog_negative, null).setSingleChoiceItems(decode, Setting.getLiveDecode(), (dialog, which) -> {
+            mBinding.liveDecodeText.setText(decode[which]);
+            Setting.putLiveDecode(which);
+            dialog.dismiss();
+        }).show();
     }
 
     private void setDanmakuLoad(View view) {

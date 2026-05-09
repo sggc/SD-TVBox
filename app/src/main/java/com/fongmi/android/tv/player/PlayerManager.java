@@ -57,6 +57,11 @@ public class PlayerManager implements ParseCallback {
         this.callback = callback;
     }
 
+    public void initDecode(boolean live) {
+        int decode = live ? Setting.getLiveDecode() : Setting.getVodDecode();
+        engine.setDecode(decode);
+    }
+
     public void release() {
         stopParse();
         App.removeCallbacks(runnable);
