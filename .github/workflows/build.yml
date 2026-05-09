@@ -35,6 +35,11 @@ jobs:
             echo "storeFile=release.jks" >> local.properties
             echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> local.properties
             echo "storePassword=${{ secrets.KEY_STORE_PASSWORD }}" >> local.properties
+          else
+            keytool -genkeypair -v -keystore app/debug.jks -keyalg RSA -keysize 2048 -validity 10000 -alias debug -storepass debug123 -keypass debug123 -dname "CN=Debug,O=Debug,C=US"
+            echo "storeFile=debug.jks" >> local.properties
+            echo "keyAlias=debug" >> local.properties
+            echo "storePassword=debug123" >> local.properties
           fi
 
       - name: Build Release APK
