@@ -8,3 +8,5 @@
 !gradle-wrapper.properties
 lib-*.aar
 /Release
+日志.txt
+log.txt
